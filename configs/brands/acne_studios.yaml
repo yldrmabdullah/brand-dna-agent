@@ -1,0 +1,58 @@
+# Acne Studios — Stockholm-based contemporary luxury.
+# Premium target close to Refabric's LVMH-tier commercial ambition.
+# Mainstream e-commerce with strong editorial layer (look books, magazine).
+
+name: Acne Studios
+url: https://www.acnestudios.com
+social:
+  instagram: acnestudios
+  pinterest: acnestudios
+
+known_categories:
+  - Outerwear
+  - Knitwear
+  - Denim
+  - Tailoring
+  - Footwear
+
+seed_pages:
+  - https://www.acnestudios.com/uk/en/category/women
+  - https://www.acnestudios.com/uk/en/category/men
+  - https://www.acnestudios.com/uk/en/look-books
+  - https://www.acnestudios.com/uk/en/about-us.html
+
+notes: |
+  Acne Studios runs a custom commerce stack with rich product JSON-LD.
+  The /look-books and /paper (the brand's print magazine) sections are
+  the strongest brand-voice sources. Premium positioning — restrained
+  copy, design-led editorial.
+
+crawl:
+  max_pages: 200
+  max_images: 400
+  max_concurrency: 4
+  delay_ms: 500
+  render_js: false
+  page_type_hints:
+    product:
+      - /product/
+      - /p/
+    collection:
+      - /category/
+    lookbook:
+      - /look-books
+      - /paper
+    about:
+      - /about-us
+      - /sustainability
+
+filter:
+  min_shorter_side: 512
+  fashion_score_threshold: 0.55
+  phash_hamming_threshold: 5
+  target_image_count: 100
+
+analysis:
+  palette_k: 8
+  n_aesthetic_clusters_min: 3
+  n_aesthetic_clusters_max: 5

@@ -1,0 +1,43 @@
+# Default brand config. Inherit by referencing field names — every BrandConfig
+# field has a sensible default in code (see core/config.py). This file is here
+# as a copy-paste template when onboarding a new brand.
+
+name: "Acme Fashion"
+url: "https://www.example.com"
+social: {}
+known_categories: []
+seed_pages: []
+notes: ""
+
+crawl:
+  max_pages: 200
+  max_images: 400
+  max_concurrency: 4
+  delay_ms: 400
+  request_timeout_s: 20
+  render_js: false
+  respect_robots_txt: true
+  follow_pagination: true
+  allowed_subdomains: []
+  page_type_hints: {}
+
+filter:
+  min_shorter_side: 512
+  min_bytes: 10000
+  max_bytes: 15000000
+  fashion_score_threshold: 0.55
+  phash_hamming_threshold: 5
+  target_image_count: 100
+
+analysis:
+  palette_k: 8
+  palette_color_space: lab
+  n_aesthetic_clusters_min: 3
+  n_aesthetic_clusters_max: 6
+  embedding_model: patrickjohncyh/fashion-clip
+  fashion_classifier_model: patrickjohncyh/fashion-clip
+
+models:
+  primary: null         # falls back to env BRAND_DNA_MODEL_PRIMARY
+  fast: null
+  synthesis: null

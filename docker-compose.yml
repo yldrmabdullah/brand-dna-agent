@@ -1,0 +1,14 @@
+# Single-shot runner. The agent is batch — one brand per invocation.
+# This compose file exists for ergonomics: `docker compose run agent run --config ...`
+
+services:
+  agent:
+    build: .
+    image: brand-dna-agent:latest
+    env_file: .env
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+      - ./configs:/app/configs:ro
+    # Override the entrypoint command via `docker compose run agent <args>`.
+    command: ["--help"]

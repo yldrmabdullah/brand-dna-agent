@@ -1,0 +1,53 @@
+# Les Benjamins — Istanbul-founded streetwear/luxury, Eastern + Western cultural fusion.
+# Smaller catalog than a mass-market brand, designer-led site structure.
+# Critical stress test: less structured data, more JS rendering, narrative-led copy.
+
+name: Les Benjamins
+url: https://www.lesbenjamins.com
+social:
+  instagram: lesbenjamins
+  pinterest: lesbenjaminsofficial
+
+known_categories:
+  - Streetwear
+  - Outerwear
+  - Knitwear
+  - Accessories
+  - Tailoring
+
+seed_pages:
+  - https://www.lesbenjamins.com/collections/all
+  - https://www.lesbenjamins.com/pages/about
+  - https://www.lesbenjamins.com/blogs/journal
+
+notes: |
+  Shopify-based site (typical for designer brands at this scale). Good JSON-LD
+  on product pages; brand voice is concentrated in /pages/about and /blogs/journal.
+  Mahalla series and East-meets-West narrative are signature.
+
+crawl:
+  max_pages: 150
+  max_images: 350
+  max_concurrency: 3
+  delay_ms: 600
+  render_js: false
+  page_type_hints:
+    product:
+      - /products/
+    collection:
+      - /collections/
+    blog:
+      - /blogs/
+    about:
+      - /pages/about
+
+filter:
+  min_shorter_side: 512
+  fashion_score_threshold: 0.55
+  phash_hamming_threshold: 5
+  target_image_count: 100
+
+analysis:
+  palette_k: 8
+  n_aesthetic_clusters_min: 3
+  n_aesthetic_clusters_max: 6

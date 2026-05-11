@@ -1,0 +1,56 @@
+# COS — H&M Group, contemporary minimalism.
+# Mainstream e-commerce, well-structured site (schema.org JSON-LD, sitemaps).
+# Good first-line stress test for the agent: clean signal, lots of data.
+
+name: COS
+url: https://www.cos.com
+social:
+  instagram: cosstores
+  pinterest: cosstores
+
+# Optional hints. The agent works without these — they just bias the priority order.
+known_categories:
+  - Outerwear
+  - Knitwear
+  - Tailoring
+  - Dresses
+
+seed_pages:
+  - https://www.cos.com/en/women/view-all
+  - https://www.cos.com/en/men/view-all
+  - https://www.cos.com/en/world-of-cos
+  - https://www.cos.com/en/sustainability
+
+notes: |
+  COS uses a Hybris-based ecommerce stack with rich JSON-LD on product pages.
+  The /world-of-cos editorial section is the best source of brand voice.
+
+crawl:
+  max_pages: 200
+  max_images: 400
+  max_concurrency: 4
+  delay_ms: 500
+  render_js: true
+  page_type_hints:
+    product:
+      - /product/
+    collection:
+      - /view-all
+      - /women/
+      - /men/
+    lookbook:
+      - /world-of-cos
+    about:
+      - /sustainability
+      - /about-us
+
+filter:
+  min_shorter_side: 512
+  fashion_score_threshold: 0.55
+  phash_hamming_threshold: 5
+  target_image_count: 100
+
+analysis:
+  palette_k: 8
+  n_aesthetic_clusters_min: 3
+  n_aesthetic_clusters_max: 5

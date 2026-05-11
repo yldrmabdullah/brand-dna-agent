@@ -1,0 +1,61 @@
+# ─── Secrets & local config ──────────────────────────────────────────────
+.env
+.env.local
+*.key
+*.pem
+
+# ─── Python ──────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ─── ML / model weights / data ───────────────────────────────────────────
+data/
+!data/.gitkeep
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+.cache/
+
+# ─── Run outputs ─────────────────────────────────────────────────────────
+outputs/
+!outputs/.gitkeep
+
+# ─── IDE / OS ────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── Logs ────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Playwright ──────────────────────────────────────────────────────────
+playwright-report/
+test-results/
