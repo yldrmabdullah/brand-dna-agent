@@ -1,0 +1,800 @@
+{
+  "brand_name": "Acne Studios",
+  "brand_url": "https://www.acnestudios.com",
+  "social_handles": {
+    "instagram": "acnestudios",
+    "pinterest": "acnestudios"
+  },
+  "color_palette": {
+    "entries": [
+      {
+        "hex": "#F0F0F0",
+        "rgb": [
+          240,
+          240,
+          240
+        ],
+        "lab": [
+          94.90062713623047,
+          0.022230982780456543,
+          -0.01588296890258789
+        ],
+        "percentage": 57.27087009007336,
+        "nearest_pantone": "11-0601 TPG (Bright White) (~\u039410)",
+        "descriptor": "gallery white \u2014 untreated canvas"
+      },
+      {
+        "hex": "#E7D9D9",
+        "rgb": [
+          231,
+          217,
+          217
+        ],
+        "lab": [
+          87.6778335571289,
+          5.113752841949463,
+          1.3367847204208374
+        ],
+        "percentage": 12.401337171510818,
+        "nearest_pantone": "Cool Gray 1 (~\u039414)",
+        "descriptor": "pale ash \u2014 morning concrete"
+      },
+      {
+        "hex": "#B1B7BB",
+        "rgb": [
+          177,
+          183,
+          187
+        ],
+        "lab": [
+          73.95187377929688,
+          -1.1284371614456177,
+          -2.975705623626709
+        ],
+        "percentage": 10.883090351936113,
+        "nearest_pantone": "Cool Gray 5 (~\u03949)",
+        "descriptor": "cool slate \u2014 Stockholm winter sky"
+      },
+      {
+        "hex": "#D0B18C",
+        "rgb": [
+          208,
+          177,
+          140
+        ],
+        "lab": [
+          73.92727661132812,
+          5.830078601837158,
+          22.740755081176758
+        ],
+        "percentage": 7.024793388429752,
+        "nearest_pantone": "14-1116 TPG (Sand) (~\u03948)",
+        "descriptor": "dry sand \u2014 unglazed ceramic"
+      },
+      {
+        "hex": "#3B3729",
+        "rgb": [
+          59,
+          55,
+          41
+        ],
+        "lab": [
+          23.17827606201172,
+          -1.3218213319778442,
+          9.878739356994629
+        ],
+        "percentage": 4.280806017271798,
+        "nearest_pantone": "PMS 4625 (Chocolate) (~\u039419)",
+        "descriptor": "bitter chocolate \u2014 Swedish soil"
+      },
+      {
+        "hex": "#9B7153",
+        "rgb": [
+          155,
+          113,
+          83
+        ],
+        "lab": [
+          51.174991607666016,
+          12.45600700378418,
+          23.426288604736328
+        ],
+        "percentage": 3.561147738880119,
+        "nearest_pantone": "PMS 4715 (Mocha) (~\u039415)",
+        "descriptor": null
+      },
+      {
+        "hex": "#727672",
+        "rgb": [
+          114,
+          118,
+          114
+        ],
+        "lab": [
+          49.10968780517578,
+          -1.8748515844345093,
+          1.2873281240463257
+        ],
+        "percentage": 3.157210511653821,
+        "nearest_pantone": "Cool Gray 9 (~\u039410)",
+        "descriptor": null
+      },
+      {
+        "hex": "#7EA4C7",
+        "rgb": [
+          126,
+          164,
+          199
+        ],
+        "lab": [
+          65.90071105957031,
+          -4.272185325622559,
+          -22.097444534301758
+        ],
+        "percentage": 1.4207447302442193,
+        "nearest_pantone": "PMS 7445 (Lavender) (~\u039448)",
+        "descriptor": null
+      }
+    ],
+    "extraction_method": "kmeans_lab_k=8",
+    "sample_size": 29
+  },
+  "garment_distribution": {
+    "counts": {},
+    "percentages": {},
+    "sample_size": 0
+  },
+  "aesthetic_clusters": [
+    {
+      "cluster_id": 2,
+      "label": "Distressed Denim Craft",
+      "description": "Heavily manipulated denim with painterly floral applications, distressing, and unconventional silhouettes. Paired with washed metallics, oversized basics, and micro-checks in pale blue and silver tones. Styling embraces ironic luxury through fur slides and aviator sunglasses.",
+      "size": 11,
+      "representative_image_ids": [
+        "aaf97b146b61468f",
+        "06e1eb943736d9fb",
+        "0a03d2e5d1a896d8",
+        "e6ea57219fc7125e",
+        "57a709ba73807a3d"
+      ],
+      "centroid_distance_stddev": 0.020539091899991035
+    },
+    {
+      "cluster_id": 1,
+      "label": "Subversive Basics Expansion",
+      "description": "Oversized, voluminous silhouettes in jersey and technical fabrics with exaggerated proportions. Palette spans powder pink, metallic silver, and soft pastels. Styling emphasizes brand heritage through visible labels, archive references, and deconstructed sportswear codes.",
+      "size": 7,
+      "representative_image_ids": [
+        "c0d1a9ebd89d8cc1",
+        "3bcb528750eaba4d",
+        "7505302324629852",
+        "f2556d2190a08e07",
+        "08965f94adfcee8d"
+      ],
+      "centroid_distance_stddev": 0.0322517566382885
+    },
+    {
+      "cluster_id": 4,
+      "label": "Refined Thong Sandal",
+      "description": "Minimalist thong sandals in glossy patent leather with sculptural straps and kitten heels. Monochromatic olive green dominates, with clean studio presentation emphasizing Italian craftsmanship and architectural form over embellishment.",
+      "size": 5,
+      "representative_image_ids": [
+        "dd0f1e8a302138d5",
+        "77c9386ded3051d8",
+        "3578a9df6a52f352",
+        "739dc35ad2431d7c",
+        "b469332ab0270136"
+      ],
+      "centroid_distance_stddev": 0.019414611160755157
+    },
+    {
+      "cluster_id": 0,
+      "label": "Heritage Logo Sportswear",
+      "description": "Casual athletic staples reinterpreted through archival branding and soft pastel or micro-check palettes. Oversized puffer jackets, polo shirts, and hoodies feature prominent embroidered logos and establishment dates, nodding to vintage sportswear with deliberate nostalgic detailing.",
+      "size": 4,
+      "representative_image_ids": [
+        "035342cb4e08e56c",
+        "0fc2b7417832f883",
+        "1cd1716a4e6527b2",
+        "461abb14c77db441"
+      ],
+      "centroid_distance_stddev": 0.02973298542201519
+    },
+    {
+      "cluster_id": 3,
+      "label": "Archival Object Study",
+      "description": "Product-as-artifact presentation with items isolated in wooden shadow boxes against neutral backdrops. Muted blue-grey palette dominates through check patterns and suede textures. Styling removes context, elevating everyday pieces to museum-worthy objects through deliberate framing and material focus.",
+      "size": 2,
+      "representative_image_ids": [
+        "308de3c65dd0b82c",
+        "594d6cf364588357"
+      ],
+      "centroid_distance_stddev": 0.0
+    }
+  ],
+  "silhouette_summary": [
+    "Relaxed",
+    "Fitted",
+    "Layered",
+    "Oversized"
+  ],
+  "styling_cues": [
+    "minimal styling"
+  ],
+  "brand_voice": {
+    "tone_descriptors": [
+      "minimal",
+      "institutional",
+      "matter-of-fact",
+      "culturally elevated"
+    ],
+    "recurring_vocabulary": [
+      "collection",
+      "runway",
+      "gallery",
+      "Palais Royal",
+      "merging fashion, art, and publishing"
+    ],
+    "stated_values": [],
+    "positioning_statement": "A fashion house that merges fashion, art, and publishing through culturally elevated retail and gallery experiences.",
+    "representative_quotes": [
+      "A permanent gallery by Acne Studios, merging fashion, art, and publishing beneath the arcades of Palais Royal.",
+      "Acne Studios presents Women's Fall/Winter 2026.",
+      "Fast delivery and easy returns or exchanges on all orders."
+    ]
+  },
+  "audience": {
+    "demographic_cues": [
+      "Women and men, roughly equal representation",
+      "Young adults, approximately 20s\u201330s based on model casting",
+      "Urban, cosmopolitan sensibility",
+      "Culturally engaged, art-aware"
+    ],
+    "psychographic_cues": [
+      "Design-literate, values conceptual fashion over trend-chasing",
+      "Art and culture participants, not passive consumers",
+      "Comfortable with irony and subversion (floral-painted distressed jeans, plaid boxers as art object)",
+      "Seeks understated distinction over overt luxury signaling",
+      "Values craft and material innovation (metallic jersey, sculptural silhouettes)",
+      "Intellectual curiosity, evidenced by gallery reference (Acne Paper Palais Royal)",
+      "Gender-fluid or non-binary aesthetic sensibility"
+    ],
+    "aspirational_signals": [
+      "Membership in a culturally informed, insider community",
+      "Creative individualism expressed through unexpected design choices",
+      "Sophisticated nonchalance, anti-fashion fashion stance",
+      "Access to art-world adjacency and cultural capital"
+    ],
+    "price_positioning": "accessible luxury",
+    "evidence_snippets": [
+      "Text references 'Acne Paper Palais Royal' gallery, positioning brand at fashion-art intersection",
+      "Image shows plaid boxer shorts framed in museum-quality wood case, treating everyday garment as art object",
+      "Metallic jersey with visible brand logo, furry slides, oversized sunglasses suggest high production values with playful irreverence",
+      "Clean white backgrounds, minimal styling, and conceptual product shots indicate contemporary luxury visual language",
+      "FW26 runway mention and seasonal collection structure signal established luxury brand infrastructure"
+    ]
+  },
+  "train_modules": {
+    "look": {
+      "representative_image_ids": [
+        "aaf97b146b61468f",
+        "06e1eb943736d9fb",
+        "c0d1a9ebd89d8cc1",
+        "3bcb528750eaba4d",
+        "dd0f1e8a302138d5",
+        "77c9386ded3051d8",
+        "035342cb4e08e56c",
+        "0fc2b7417832f883"
+      ],
+      "aesthetic_summary": "Oversized blazer in muted gray over fitted white tee, paired with straight-leg distressed denim and minimal leather sandals.",
+      "seasonal_signals": []
+    },
+    "mood": {
+      "mood_descriptors": [
+        "institutional",
+        "Nordic restraint",
+        "gallery opening",
+        "studied nonchalance"
+      ],
+      "emotional_atmosphere": "minimal, institutional, matter-of-fact, Membership in a culturally informed, insider community, Creative individualism expressed through unexpected design choices",
+      "color_palette": {
+        "entries": [
+          {
+            "hex": "#F0F0F0",
+            "rgb": [
+              240,
+              240,
+              240
+            ],
+            "lab": [
+              94.90062713623047,
+              0.022230982780456543,
+              -0.01588296890258789
+            ],
+            "percentage": 57.27087009007336,
+            "nearest_pantone": "11-0601 TPG (Bright White) (~\u039410)",
+            "descriptor": "gallery white \u2014 untreated canvas"
+          },
+          {
+            "hex": "#E7D9D9",
+            "rgb": [
+              231,
+              217,
+              217
+            ],
+            "lab": [
+              87.6778335571289,
+              5.113752841949463,
+              1.3367847204208374
+            ],
+            "percentage": 12.401337171510818,
+            "nearest_pantone": "Cool Gray 1 (~\u039414)",
+            "descriptor": "pale ash \u2014 morning concrete"
+          },
+          {
+            "hex": "#B1B7BB",
+            "rgb": [
+              177,
+              183,
+              187
+            ],
+            "lab": [
+              73.95187377929688,
+              -1.1284371614456177,
+              -2.975705623626709
+            ],
+            "percentage": 10.883090351936113,
+            "nearest_pantone": "Cool Gray 5 (~\u03949)",
+            "descriptor": "cool slate \u2014 Stockholm winter sky"
+          },
+          {
+            "hex": "#D0B18C",
+            "rgb": [
+              208,
+              177,
+              140
+            ],
+            "lab": [
+              73.92727661132812,
+              5.830078601837158,
+              22.740755081176758
+            ],
+            "percentage": 7.024793388429752,
+            "nearest_pantone": "14-1116 TPG (Sand) (~\u03948)",
+            "descriptor": "dry sand \u2014 unglazed ceramic"
+          },
+          {
+            "hex": "#3B3729",
+            "rgb": [
+              59,
+              55,
+              41
+            ],
+            "lab": [
+              23.17827606201172,
+              -1.3218213319778442,
+              9.878739356994629
+            ],
+            "percentage": 4.280806017271798,
+            "nearest_pantone": "PMS 4625 (Chocolate) (~\u039419)",
+            "descriptor": "bitter chocolate \u2014 Swedish soil"
+          },
+          {
+            "hex": "#9B7153",
+            "rgb": [
+              155,
+              113,
+              83
+            ],
+            "lab": [
+              51.174991607666016,
+              12.45600700378418,
+              23.426288604736328
+            ],
+            "percentage": 3.561147738880119,
+            "nearest_pantone": "PMS 4715 (Mocha) (~\u039415)",
+            "descriptor": null
+          },
+          {
+            "hex": "#727672",
+            "rgb": [
+              114,
+              118,
+              114
+            ],
+            "lab": [
+              49.10968780517578,
+              -1.8748515844345093,
+              1.2873281240463257
+            ],
+            "percentage": 3.157210511653821,
+            "nearest_pantone": "Cool Gray 9 (~\u039410)",
+            "descriptor": null
+          },
+          {
+            "hex": "#7EA4C7",
+            "rgb": [
+              126,
+              164,
+              199
+            ],
+            "lab": [
+              65.90071105957031,
+              -4.272185325622559,
+              -22.097444534301758
+            ],
+            "percentage": 1.4207447302442193,
+            "nearest_pantone": "PMS 7445 (Lavender) (~\u039448)",
+            "descriptor": null
+          }
+        ],
+        "extraction_method": "kmeans_lab_k=8",
+        "sample_size": 29
+      }
+    },
+    "attribute": {
+      "silhouettes": [
+        "Relaxed",
+        "Fitted",
+        "Layered",
+        "Oversized"
+      ],
+      "construction_details": [
+        "contrast topstitching on denim",
+        "raw-edge hems",
+        "exaggerated shoulder drops",
+        "minimal hardware",
+        "tonal embossed logos"
+      ],
+      "embellishments": []
+    },
+    "fabric": {
+      "detected_materials": [
+        "rigid denim",
+        "compact cotton jersey",
+        "smooth leather",
+        "metallic jersey",
+        "wool suiting"
+      ],
+      "texture_descriptors": [
+        "rigid denim",
+        "compact cotton jersey",
+        "smooth leather",
+        "metallic jersey",
+        "wool suiting"
+      ],
+      "sustainability_signals": []
+    },
+    "pattern": {
+      "pattern_types": [
+        "predominantly solid colors",
+        "no prints",
+        "occasional tonal textures",
+        "logo as subtle embossing only"
+      ],
+      "motif_descriptors": [
+        "predominantly solid colors",
+        "no prints",
+        "occasional tonal textures",
+        "logo as subtle embossing only"
+      ]
+    }
+  },
+  "confidences": {
+    "color_palette": {
+      "score": 0.39749999999999996,
+      "sample_size": 29,
+      "method": "kmeans_lab",
+      "notes": "LAB-space KMeans across pooled pixels."
+    },
+    "garment_distribution": {
+      "score": 0.0,
+      "sample_size": 0,
+      "method": "fashion_clip_zero_shot",
+      "notes": null
+    },
+    "aesthetic_clusters": {
+      "score": 0.29,
+      "sample_size": 29,
+      "method": "kmeans_silhouette_k=5",
+      "notes": "Silhouette score: n/a"
+    },
+    "brand_voice": {
+      "score": 0.19094999999999998,
+      "sample_size": 1273,
+      "method": "llm_extraction",
+      "notes": "Sample size in characters of brand-published text."
+    },
+    "audience": {
+      "score": 0.48224374999999997,
+      "sample_size": 1249,
+      "method": "multimodal_llm",
+      "notes": "1243 text chars + 6 visual samples."
+    }
+  },
+  "provenance": [
+    {
+      "claim": "Voice sample: \u201cA permanent gallery by Acne Studios, merging fashion, art, and publishing beneath the arcades of Palais Royal.\u201d",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "A permanent gallery by Acne Studios, merging fashion, art, and publishing beneath the arcades of Palais Royal."
+        }
+      ]
+    },
+    {
+      "claim": "Voice sample: \u201cAcne Studios presents Women's Fall/Winter 2026.\u201d",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "Acne Studios presents Women's Fall/Winter 2026."
+        }
+      ]
+    },
+    {
+      "claim": "Voice sample: \u201cFast delivery and easy returns or exchanges on all orders.\u201d",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "Fast delivery and easy returns or exchanges on all orders."
+        }
+      ]
+    },
+    {
+      "claim": "Audience signal: Text references 'Acne Paper Palais Royal' gallery, positioning brand at fashion-art intersection",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "Text references 'Acne Paper Palais Royal' gallery, positioning brand at fashion-art intersection"
+        }
+      ]
+    },
+    {
+      "claim": "Audience signal: Image shows plaid boxer shorts framed in museum-quality wood case, treating everyday garment as art object",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "Image shows plaid boxer shorts framed in museum-quality wood case, treating everyday garment as art object"
+        }
+      ]
+    },
+    {
+      "claim": "Audience signal: Metallic jersey with visible brand logo, furry slides, oversized sunglasses suggest high production values with playful irreverence",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "Metallic jersey with visible brand logo, furry slides, oversized sunglasses suggest high production values with playful irreverence"
+        }
+      ]
+    },
+    {
+      "claim": "Audience signal: Clean white backgrounds, minimal styling, and conceptual product shots indicate contemporary luxury visual language",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "Clean white backgrounds, minimal styling, and conceptual product shots indicate contemporary luxury visual language"
+        }
+      ]
+    },
+    {
+      "claim": "Audience signal: FW26 runway mention and seasonal collection structure signal established luxury brand infrastructure",
+      "sources": [
+        {
+          "kind": "page",
+          "ref": "brand_corpus",
+          "snippet": "FW26 runway mention and seasonal collection structure signal established luxury brand infrastructure"
+        }
+      ]
+    },
+    {
+      "claim": "Cluster: Distressed Denim Craft",
+      "sources": [
+        {
+          "kind": "image",
+          "ref": "aaf97b146b61468f",
+          "snippet": "Layered logo t-shirt"
+        },
+        {
+          "kind": "image",
+          "ref": "06e1eb943736d9fb",
+          "snippet": "Layered logo t-shirt"
+        },
+        {
+          "kind": "image",
+          "ref": "0a03d2e5d1a896d8",
+          "snippet": "Hooded check jacket"
+        }
+      ]
+    },
+    {
+      "claim": "Cluster: Subversive Basics Expansion",
+      "sources": [
+        {
+          "kind": "image",
+          "ref": "c0d1a9ebd89d8cc1",
+          "snippet": "Gathered logo t-shirt"
+        },
+        {
+          "kind": "image",
+          "ref": "3bcb528750eaba4d",
+          "snippet": "Layered logo t-shirt"
+        },
+        {
+          "kind": "image",
+          "ref": "7505302324629852",
+          "snippet": "Gathered logo t-shirt"
+        }
+      ]
+    },
+    {
+      "claim": "Cluster: Refined Thong Sandal",
+      "sources": [
+        {
+          "kind": "image",
+          "ref": "dd0f1e8a302138d5",
+          "snippet": "Kitten Heel Sandals"
+        },
+        {
+          "kind": "image",
+          "ref": "77c9386ded3051d8",
+          "snippet": "Kitten Heel Sandals"
+        },
+        {
+          "kind": "image",
+          "ref": "3578a9df6a52f352",
+          "snippet": "Kitten Heel Sandals"
+        }
+      ]
+    },
+    {
+      "claim": "Cluster: Heritage Logo Sportswear",
+      "sources": [
+        {
+          "kind": "image",
+          "ref": "035342cb4e08e56c",
+          "snippet": "Hooded check jacket"
+        },
+        {
+          "kind": "image",
+          "ref": "0fc2b7417832f883",
+          "snippet": "Acne Studios SS26 Summer Collection light pink t-shirt with collar and blue Acne Studios logo folded and presented on a light wooden tray."
+        },
+        {
+          "kind": "image",
+          "ref": "1cd1716a4e6527b2",
+          "snippet": "Hooded check jacket"
+        }
+      ]
+    },
+    {
+      "claim": "Cluster: Archival Object Study",
+      "sources": [
+        {
+          "kind": "image",
+          "ref": "308de3c65dd0b82c",
+          "snippet": "Acne Studios SS26 Summer Collection blue checked shorts presented on a light wooden tray."
+        },
+        {
+          "kind": "image",
+          "ref": "594d6cf364588357",
+          "snippet": "An Acne Studios blue suede Camero bag presented on a light wooden panel."
+        }
+      ]
+    }
+  ],
+  "executive_summary": "Acne Studios operates at the intersection of fashion house and cultural institution, producing clothing that functions as both wardrobe and artistic statement. The brand's visual language centers on a palette of non-colors\u2014gallery whites, concrete grays, occasional sand\u2014deployed across relaxed silhouettes that shift between oversized and fitted without committing to either extreme. This studied ambiguity extends to their product range: distressed denim sits alongside refined leather goods, heritage sportswear adjacent to conceptual basics. The audience comprises urban twenty-to-thirty-somethings who parse fashion through an art-historical lens, seeking pieces that signal cultural literacy rather than wealth. They understand the irony in $400 distressed jeans and appreciate the reference when a plaid boxer becomes gallery object.",
+  "one_line_positioning": "Fashion house treating garments as cultural artifacts for an art-literate urban audience.",
+  "run_metadata": {
+    "run_id": "20260511T084832Z-0c4f60",
+    "brand_name": "Acne Studios",
+    "started_at": "2026-05-11T08:48:32.195526Z",
+    "finished_at": "2026-05-11T08:52:49.979274Z",
+    "total_duration_s": 257.783748,
+    "stages": [
+      {
+        "stage": "crawl",
+        "duration_s": 101.497568,
+        "items_processed": 196,
+        "notes": null
+      },
+      {
+        "stage": "social_instagram",
+        "duration_s": 0.559458,
+        "items_processed": 1,
+        "notes": null
+      },
+      {
+        "stage": "image_download",
+        "duration_s": 74.899358,
+        "items_processed": 38,
+        "notes": null
+      },
+      {
+        "stage": "quality_filter",
+        "duration_s": 0.000187,
+        "items_processed": 33,
+        "notes": null
+      },
+      {
+        "stage": "fashion_classifier",
+        "duration_s": 5.385614,
+        "items_processed": 30,
+        "notes": null
+      },
+      {
+        "stage": "dedup",
+        "duration_s": 0.785343,
+        "items_processed": 29,
+        "notes": null
+      },
+      {
+        "stage": "persist",
+        "duration_s": 0.041899,
+        "items_processed": 225,
+        "notes": null
+      },
+      {
+        "stage": "color_palette",
+        "duration_s": 1.016606,
+        "items_processed": 8,
+        "notes": null
+      },
+      {
+        "stage": "garment_aggregate",
+        "duration_s": 8.1e-05,
+        "items_processed": 0,
+        "notes": null
+      },
+      {
+        "stage": "silhouette",
+        "duration_s": 0.043218,
+        "items_processed": 4,
+        "notes": null
+      },
+      {
+        "stage": "clustering",
+        "duration_s": 0.034554,
+        "items_processed": 5,
+        "notes": null
+      },
+      {
+        "stage": "brand_voice",
+        "duration_s": 5.082877,
+        "items_processed": 1273,
+        "notes": null
+      },
+      {
+        "stage": "audience",
+        "duration_s": 15.405433,
+        "items_processed": 1243,
+        "notes": null
+      },
+      {
+        "stage": "cluster_labels",
+        "duration_s": 34.719898,
+        "items_processed": 5,
+        "notes": null
+      },
+      {
+        "stage": "synthesis",
+        "duration_s": 18.307015,
+        "items_processed": 1,
+        "notes": null
+      }
+    ],
+    "images_acquired": 29,
+    "images_after_filter": 29,
+    "pages_crawled": 196,
+    "llm_tokens_in": 46072,
+    "llm_tokens_out": 1847,
+    "estimated_cost_usd": 0.207321,
+    "errors": []
+  }
+}

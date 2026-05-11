@@ -1,0 +1,206 @@
+{
+  "look": {
+    "representative_image_ids": [
+      "aaf97b146b61468f",
+      "06e1eb943736d9fb",
+      "c0d1a9ebd89d8cc1",
+      "3bcb528750eaba4d",
+      "dd0f1e8a302138d5",
+      "77c9386ded3051d8",
+      "035342cb4e08e56c",
+      "0fc2b7417832f883"
+    ],
+    "aesthetic_summary": "Oversized blazer in muted gray over fitted white tee, paired with straight-leg distressed denim and minimal leather sandals.",
+    "seasonal_signals": []
+  },
+  "mood": {
+    "mood_descriptors": [
+      "institutional",
+      "Nordic restraint",
+      "gallery opening",
+      "studied nonchalance"
+    ],
+    "emotional_atmosphere": "minimal, institutional, matter-of-fact, Membership in a culturally informed, insider community, Creative individualism expressed through unexpected design choices",
+    "color_palette": {
+      "entries": [
+        {
+          "hex": "#F0F0F0",
+          "rgb": [
+            240,
+            240,
+            240
+          ],
+          "lab": [
+            94.90062713623047,
+            0.022230982780456543,
+            -0.01588296890258789
+          ],
+          "percentage": 57.27087009007336,
+          "nearest_pantone": "11-0601 TPG (Bright White) (~\u039410)",
+          "descriptor": "gallery white \u2014 untreated canvas"
+        },
+        {
+          "hex": "#E7D9D9",
+          "rgb": [
+            231,
+            217,
+            217
+          ],
+          "lab": [
+            87.6778335571289,
+            5.113752841949463,
+            1.3367847204208374
+          ],
+          "percentage": 12.401337171510818,
+          "nearest_pantone": "Cool Gray 1 (~\u039414)",
+          "descriptor": "pale ash \u2014 morning concrete"
+        },
+        {
+          "hex": "#B1B7BB",
+          "rgb": [
+            177,
+            183,
+            187
+          ],
+          "lab": [
+            73.95187377929688,
+            -1.1284371614456177,
+            -2.975705623626709
+          ],
+          "percentage": 10.883090351936113,
+          "nearest_pantone": "Cool Gray 5 (~\u03949)",
+          "descriptor": "cool slate \u2014 Stockholm winter sky"
+        },
+        {
+          "hex": "#D0B18C",
+          "rgb": [
+            208,
+            177,
+            140
+          ],
+          "lab": [
+            73.92727661132812,
+            5.830078601837158,
+            22.740755081176758
+          ],
+          "percentage": 7.024793388429752,
+          "nearest_pantone": "14-1116 TPG (Sand) (~\u03948)",
+          "descriptor": "dry sand \u2014 unglazed ceramic"
+        },
+        {
+          "hex": "#3B3729",
+          "rgb": [
+            59,
+            55,
+            41
+          ],
+          "lab": [
+            23.17827606201172,
+            -1.3218213319778442,
+            9.878739356994629
+          ],
+          "percentage": 4.280806017271798,
+          "nearest_pantone": "PMS 4625 (Chocolate) (~\u039419)",
+          "descriptor": "bitter chocolate \u2014 Swedish soil"
+        },
+        {
+          "hex": "#9B7153",
+          "rgb": [
+            155,
+            113,
+            83
+          ],
+          "lab": [
+            51.174991607666016,
+            12.45600700378418,
+            23.426288604736328
+          ],
+          "percentage": 3.561147738880119,
+          "nearest_pantone": "PMS 4715 (Mocha) (~\u039415)",
+          "descriptor": null
+        },
+        {
+          "hex": "#727672",
+          "rgb": [
+            114,
+            118,
+            114
+          ],
+          "lab": [
+            49.10968780517578,
+            -1.8748515844345093,
+            1.2873281240463257
+          ],
+          "percentage": 3.157210511653821,
+          "nearest_pantone": "Cool Gray 9 (~\u039410)",
+          "descriptor": null
+        },
+        {
+          "hex": "#7EA4C7",
+          "rgb": [
+            126,
+            164,
+            199
+          ],
+          "lab": [
+            65.90071105957031,
+            -4.272185325622559,
+            -22.097444534301758
+          ],
+          "percentage": 1.4207447302442193,
+          "nearest_pantone": "PMS 7445 (Lavender) (~\u039448)",
+          "descriptor": null
+        }
+      ],
+      "extraction_method": "kmeans_lab_k=8",
+      "sample_size": 29
+    }
+  },
+  "attribute": {
+    "silhouettes": [
+      "Relaxed",
+      "Fitted",
+      "Layered",
+      "Oversized"
+    ],
+    "construction_details": [
+      "contrast topstitching on denim",
+      "raw-edge hems",
+      "exaggerated shoulder drops",
+      "minimal hardware",
+      "tonal embossed logos"
+    ],
+    "embellishments": []
+  },
+  "fabric": {
+    "detected_materials": [
+      "rigid denim",
+      "compact cotton jersey",
+      "smooth leather",
+      "metallic jersey",
+      "wool suiting"
+    ],
+    "texture_descriptors": [
+      "rigid denim",
+      "compact cotton jersey",
+      "smooth leather",
+      "metallic jersey",
+      "wool suiting"
+    ],
+    "sustainability_signals": []
+  },
+  "pattern": {
+    "pattern_types": [
+      "predominantly solid colors",
+      "no prints",
+      "occasional tonal textures",
+      "logo as subtle embossing only"
+    ],
+    "motif_descriptors": [
+      "predominantly solid colors",
+      "no prints",
+      "occasional tonal textures",
+      "logo as subtle embossing only"
+    ]
+  }
+}

@@ -4,6 +4,8 @@
 
 Brand DNA Agent is a high-performance AI agent that crawls fashion brand websites and social presence to extract structured "Brand DNA" dossiers. It combines advanced computer vision (FashionCLIP), aesthetic clustering, and multimodal LLMs to produce strategic insights in PDF and JSON formats.
 
+![Dashboard Overview](./docs/assets/dashboard.png)
+
 ## 🚀 Key Features
 
 - **Autonomous Discovery:** Brand-agnostic crawling using `robots.txt`, sitemaps, and JSON-LD. No custom scrapers needed.
@@ -15,6 +17,22 @@ Brand DNA Agent is a high-performance AI agent that crawls fashion brand website
     - 📄 **PDF Dossier:** Beautifully rendered, strategist-ready brand books.
     - 🤖 **Machine Manifests:** Refabric-compatible training modules (Look, Mood, Pattern, etc.).
 - **Modern Web Dashboard:** A sleek, responsive dark-mode UI to manage brands and monitor runs in real-time.
+
+## 🖼 Interface Preview
+
+| Brand Management | Analysis Report |
+|------------------|-----------------|
+| ![Brand Detail](./docs/assets/brand_detail.png) | ![Run Report](./docs/assets/run_report.png) |
+
+> *Adding a new brand is as simple as entering a URL:*
+> ![New Brand Form](./docs/assets/new_brand.png)
+
+## 📄 Example Outputs
+
+You can find complete examples of the agent's output in the [examples/](./examples) directory:
+- [PDF Brand DNA Dossier (Acne Studios)](./examples/acne-studios-dna.pdf)
+- [JSON Brand DNA Data](./examples/acne-studios-dna.json)
+- [Refabric Training Manifest](./examples/acne-studios-train.json)
 
 ## 🛠 Tech Stack
 
