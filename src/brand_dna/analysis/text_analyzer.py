@@ -100,14 +100,17 @@ async def analyse_brand_voice(
             0,
         )
 
+    target_lang = getattr(llm, "target_language", "English") # Fallback to English
+
     prompt = render("brand_voice", brand_name=brand_name, corpus=corpus)
     data, _ = await llm.chat_json(
         prompt,
         model=model,
         system=(
-            "You are a senior brand strategist. Extract tonal and positioning "
-            "signals from brand-published text with precision. Never invent "
-            "details not supported by the corpus."
+            f"You are a senior brand strategist. The following corpus might be in "
+            f"any language. Analyze it in its original context, but provide "
+            f"ALL output fields in {target_lang}. Extract tonal "
+            f"and positioning signals with precision."
         ),
         temperature=0.15,
         max_tokens=1800,

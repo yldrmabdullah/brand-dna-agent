@@ -6,15 +6,22 @@ Brand DNA Agent is a high-performance AI agent that crawls fashion brand website
 
 ![Dashboard Overview](./docs/assets/dashboard.png)
 
-## 🚀 Key Features
+## 🚀 Technical Innovation
 
-- **Autonomous Discovery:** Brand-agnostic crawling using `robots.txt`, sitemaps, and JSON-LD. No custom scrapers needed.
-- **Multimodal Intelligence:** 
-    - **Vision:** FashionCLIP-based garment classification and quality filtering.
-    - **Aesthetics:** K-Means clustering in CLIP space to identify visual style "DNA".
-    - **Synthesis:** LLM-driven brand voice extraction and audience profiling.
-- **Strategic Outputs:**
-    - 📄 **PDF Dossier:** Beautifully rendered, strategist-ready brand books.
+This agent isn't just a crawler; it's a multi-stage intelligence pipeline designed for high-fidelity brand synthesis.
+
+- **🌍 Cross-Lingual Strategic Analysis:** Automatically detects and analyzes brand identity in its native language (French, Italian, Turkish, etc.) while synthesizing insights in professional English. Perfect for global fashion houses.
+- **🎨 Generative DNA Prompts:** Translates extracted brand DNA into production-ready prompts for **Stable Diffusion XL** and **Midjourney**, enabling instant creative exploration aligned with the brand's aesthetic.
+- **🤖 AI Self-Evaluation (QA Layer):** Implements a secondary LLM "critic" stage that audits the final dossier for consistency, hallucination risk, and logical alignment, assigning a verifiable Confidence Score.
+- **⚡ Parallel Intelligence Pipeline:** Uses asynchronous orchestration to run visual and textual analyses concurrently, optimizing runtime for enterprise-scale discovery.
+- **🛡️ Robust Acquisition Engine:** Advanced bot-detection bypass with browser-like header rotation, session persistence, and optional Playwright JS-rendering for SPA-heavy retail sites (Zara, COS, etc.).
+
+## 🛠️ Architecture & Stack
+
+- **Reasoning:** Claude 3.5 Sonnet (Synthesis) & Gemini 1.5 Pro (Long-context analysis).
+- **Vision:** CLIP-based aesthetic clustering & multi-modal LLM reasoning.
+- **Core:** Python 3.11+, Pydantic V2 (Data Contract), FastAPI.
+- **Storage:** SQLite-backed Metadata Store for portable, inspectable runs.
     - 🤖 **Machine Manifests:** Refabric-compatible training modules (Look, Mood, Pattern, etc.).
 - **Modern Web Dashboard:** A sleek, responsive dark-mode UI to manage brands and monitor runs in real-time.
 

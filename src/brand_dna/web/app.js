@@ -216,8 +216,15 @@ function renderNewBrand(el) {
               <input class="form-input" name="instagram" placeholder="acnestudios">
             </div>
             <div class="form-group">
-              <label class="form-label">Pinterest</label>
-              <input class="form-input" name="pinterest" placeholder="acnestudios">
+              <label class="form-label">Target Language</label>
+              <select class="form-select" name="target_language">
+                <option value="English">English</option>
+                <option value="Turkish">Turkish</option>
+                <option value="French">French</option>
+                <option value="Italian">Italian</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+              </select>
             </div>
           </div>
         </div>
@@ -317,11 +324,11 @@ async function handleCreateBrand(e) {
 
   const social = {};
   if (f.instagram.value.trim()) social.instagram = f.instagram.value.trim();
-  if (f.pinterest.value.trim()) social.pinterest = f.pinterest.value.trim();
 
   const body = {
     name: f.name.value.trim(),
     url: f.url.value.trim(),
+    target_language: f.target_language.value,
     social,
     known_categories: f.categories.value.split(',').map(s => s.trim()).filter(Boolean),
     seed_pages: f.seed_pages.value.split('\n').map(s => s.trim()).filter(Boolean),

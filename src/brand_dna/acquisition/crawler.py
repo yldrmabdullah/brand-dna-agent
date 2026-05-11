@@ -96,18 +96,35 @@ class BrandCrawler:
             self._allowed_hosts.add(sub)
 
     async def __aenter__(self) -> "BrandCrawler":
+        # Professional browser headers to bypass simple WAFs (Zara, COS, etc.)
         headers = {
             "User-Agent": self.user_agent,
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "DNT": "1",
+            "Upgrade-Insecure-Requests": "1",
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-User": "?1",
+            "Cache-Control": "max-age=0",
+            "Referer": "https://www.google.com/",
         }
         self._client = httpx.AsyncClient(
             headers=headers,
             timeout=self.config.crawl.request_timeout_s,
             follow_redirects=True,
             http2=True,
+            cookies=None, # Will be managed automatically by the client
             limits=httpx.Limits(max_connections=self.config.crawl.max_concurrency * 2),
         )
+        # Try to establish a session with the homepage first
+        try:
+            await self._client.get(self.config.url, timeout=5.0)
+        except Exception:
+            pass
+
         self._robots = await load_robots_policy(
             self.config.url, self.user_agent, self._client
         )

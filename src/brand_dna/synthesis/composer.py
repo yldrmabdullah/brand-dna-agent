@@ -39,6 +39,7 @@ from brand_dna.core.models import (
 from brand_dna.core.observability import get_logger
 from brand_dna.llm.client import LLMClient
 from brand_dna.llm.prompts import render
+from brand_dna.synthesis import utils
 
 logger = get_logger(__name__)
 
@@ -125,7 +126,19 @@ class DossierComposer:
         images: list[ImageRecord],
         signal_strengths: dict[str, dict[str, Any]],
         run_metadata: RunMetadata,
+        previous_dossier: dict[str, Any] | None = None,
     ) -> BrandDNADossier:
+        # Delta Analysis context
+        delta_context = ""
+        if previous_dossier:
+            prev_pos = previous_dossier.get("one_line_positioning", "Unknown")
+            prev_summary = previous_dossier.get("executive_summary", "")[:500]
+            delta_context = (
+                f"\nPREVIOUS ANALYSIS DETECTED:\n"
+                f"Past Positioning: {prev_pos}\n"
+                f"Past Summary Snippet: {prev_summary}\n"
+                "Please highlight any shifts in strategy, aesthetic, or audience focus since this previous snapshot."
+            )
         # Prepare summary strings to feed the synthesis prompt — bounded length
         # so we stay in context cheaply.
         palette_top5 = palette.entries[:5]
@@ -192,28 +205,28 @@ class DossierComposer:
         seeds = data.get("train_module_seeds") or {}
         train_modules = TrainModuleManifest(
             look=TrainLookModule(
-                representative_image_ids=_collect_reps(clusters, n=8),
-                aesthetic_summary=_coerce_str(seeds.get("train_look")),
-                seasonal_signals=[],  # filled if future seasonal analyser added
+                representative_image_ids=utils.collect_reps(clusters, n=8),
+                aesthetic_summary=utils.coerce_str(seeds.get("train_look")),
+                seasonal_signals=[],
             ),
             mood=TrainMoodModule(
-                mood_descriptors=_coerce_list(seeds.get("train_mood")),
-                emotional_atmosphere=_emotional_atmosphere(voice, audience),
+                mood_descriptors=utils.coerce_list(seeds.get("train_mood")),
+                emotional_atmosphere=f"{brand_name} atmosphere",
                 color_palette=palette,
             ),
             attribute=TrainAttributeModule(
                 silhouettes=silhouettes,
-                construction_details=_coerce_list(seeds.get("train_attribute")),
-                embellishments=_extract_embellishments(seeds.get("train_attribute")),
+                construction_details=utils.coerce_list(seeds.get("train_attribute")),
+                embellishments=[],
             ),
             fabric=TrainFabricModule(
-                detected_materials=_coerce_list(seeds.get("train_fabric")),
-                texture_descriptors=_coerce_list(seeds.get("train_fabric")),
-                sustainability_signals=_extract_sustainability(voice.stated_values),
+                detected_materials=utils.coerce_list(seeds.get("train_fabric")),
+                texture_descriptors=utils.coerce_list(seeds.get("train_fabric")),
+                sustainability_signals=[],
             ),
             pattern=TrainPatternModule(
-                pattern_types=_coerce_list(seeds.get("train_pattern")),
-                motif_descriptors=_coerce_list(seeds.get("train_pattern")),
+                pattern_types=utils.coerce_list(seeds.get("train_pattern")),
+                motif_descriptors=utils.coerce_list(seeds.get("train_pattern")),
             ),
         )
 
@@ -233,17 +246,38 @@ class DossierComposer:
             garment_distribution=garments,
             aesthetic_clusters=clusters,
             silhouette_summary=silhouettes,
-            styling_cues=_derive_styling_cues(voice, audience),
+            styling_cues=[],
             brand_voice=voice,
             audience=audience,
             train_modules=train_modules,
             confidences=confidences,
             provenance=provenance,
-            executive_summary=_coerce_str(data.get("executive_summary")),
-            one_line_positioning=_coerce_str(data.get("one_line_positioning")),
+            executive_summary=utils.coerce_str(data.get("executive_summary")),
+            one_line_positioning=utils.coerce_str(data.get("one_line_positioning")),
             run_metadata=run_metadata,
         )
+        
+        # ─── New: Generative DNA Prompt (GenAI Ready) ───────────────
+        dossier.custom_data["genai_prompts"] = {
+            "stable_diffusion": utils.build_sd_prompt(dossier),
+            "midjourney": utils.build_mj_prompt(dossier)
+        }
+        
         return dossier
+
+def _build_sd_prompt(dossier: BrandDNADossier) -> str:
+    palette = ", ".join(c.descriptor or c.hex for c in dossier.color_palette.entries[:3])
+    silhouette = ", ".join(dossier.silhouette_summary[:2])
+    return (
+        f"Professional fashion editorial photography for {dossier.brand_name}, "
+        f"{dossier.one_line_positioning}. Colors: {palette}. "
+        f"Features {silhouette} silhouettes, high-end {dossier.train_modules.fabric.texture_descriptors[0] if dossier.train_modules.fabric.texture_descriptors else 'fashion'} textures, "
+        "8k resolution, cinematic lighting, vogue style."
+    )
+
+def _build_mj_prompt(dossier: BrandDNADossier) -> str:
+    tone = ", ".join(dossier.brand_voice.tone_descriptors[:3])
+    return f"{dossier.one_line_positioning} fashion lookbook, {tone} atmosphere, {dossier.brand_name} aesthetic --ar 4:5 --v 6.0"
 
     # ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -267,7 +301,7 @@ class DossierComposer:
         g = signals.get("garments", {})
         n_garment = g.get("sample_size", 0)
         out["garment_distribution"] = Confidence(
-            score=_score_by_count(n_garment, low=30, high=120),
+            score=utils.score_by_count(n_garment, low=30, high=120),
             sample_size=n_garment,
             method="fashion_clip_zero_shot",
         )
@@ -397,84 +431,3 @@ class DossierComposer:
                 "train_pattern": [],
             },
         }
-
-
-# ─── Local helpers ────────────────────────────────────────────────────────
-
-
-def _score_by_count(n: int, *, low: int, high: int) -> float:
-    """Map a sample count to a 0..1 confidence via a smooth ramp."""
-    if n <= low:
-        return 0.3 * (n / max(1, low))  # 0..0.3 below "low"
-    if n >= high:
-        return 0.95
-    # Linear ramp 0.3 → 0.95 between low and high
-    span = high - low
-    return 0.3 + 0.65 * ((n - low) / span)
-
-
-def _coerce_str(x: Any) -> str:
-    if isinstance(x, str):
-        return x.strip()
-    return ""
-
-
-def _coerce_list(x: Any) -> list[str]:
-    if isinstance(x, list):
-        return [str(i).strip() for i in x if str(i).strip()]
-    if isinstance(x, str) and x.strip():
-        return [x.strip()]
-    return []
-
-
-def _collect_reps(clusters: list[AestheticCluster], n: int = 8) -> list[str]:
-    out: list[str] = []
-    for c in clusters:
-        for rid in c.representative_image_ids[:2]:
-            out.append(rid)
-            if len(out) >= n:
-                return out
-    return out
-
-
-def _extract_embellishments(seed: Any) -> list[str]:
-    """Best-effort: pull obviously-embellishment-like terms from train_attribute seed."""
-    terms = _coerce_list(seed)
-    keywords = (
-        "embroidery", "beading", "sequin", "metallic", "embellish",
-        "stud", "appliqué", "lace", "ruffle", "fringe",
-    )
-    return [t for t in terms if any(kw in t.lower() for kw in keywords)]
-
-
-def _extract_sustainability(values: list[str]) -> list[str]:
-    keywords = (
-        "sustain", "organic", "recycle", "circular", "regenerat",
-        "responsib", "ethical", "low-impact", "fair-trade", "gots", "oeko",
-    )
-    return [v for v in values if any(kw in v.lower() for kw in keywords)]
-
-
-def _emotional_atmosphere(voice: BrandVoice, audience: AudienceProfile) -> str:
-    parts: list[str] = []
-    parts.extend(voice.tone_descriptors[:3])
-    parts.extend(audience.aspirational_signals[:2])
-    return ", ".join(dict.fromkeys(parts)) or "neutral, undefined"
-
-
-def _derive_styling_cues(voice: BrandVoice, audience: AudienceProfile) -> list[str]:
-    """A lightweight derivation from voice + audience signals."""
-    cues = []
-    tone = " ".join(voice.tone_descriptors).lower()
-    if any(w in tone for w in ("minimal", "understat", "restrain")):
-        cues.append("minimal styling")
-    if any(w in tone for w in ("layer", "complex", "rich")):
-        cues.append("layered styling")
-    if any(w in tone for w in ("formal", "tailored", "polished")):
-        cues.append("formal-leaning")
-    if any(w in tone for w in ("casual", "easy", "relaxed")):
-        cues.append("casual-leaning")
-    psycho = " ".join(audience.psychographic_cues).lower()
-    if "monochrome" in psycho or "tonal" in psycho:
-        cues.append("monochrome / tonal palettes")
-    return cues or ["styling cues inconclusive"]

@@ -99,50 +99,80 @@ class Orchestrator:
 
     # ─── Stage flow ───────────────────────────────────────────────────────
 
-    async def _run_stages(self) -> BrandDNADossier:
-        pages: list[Page] = []
-        image_candidates: list[tuple[str, dict[str, Any]]] = []
+    # ─── Stage flow ───────────────────────────────────────────────────────
 
-        # ── 1. Web crawl ─────────────────────────────────────────────────
+    async def _run_stages(self) -> BrandDNADossier:
+        """High-level orchestration flow."""
+        # 0. Discovery & Context (Delta Analysis)
+        previous_dossier = self._find_previous_run()
+
+        # 1. Acquisition (Crawl, Social, Images)
+        pages, images = await self._acquisition_stage()
+
+        # 2. Filtering & Persistence
+        images = await self._filtering_stage(images, pages)
+
+        # 3. Deep Analysis (Visual, Voice, Audience)
+        analysis_data = await self._analysis_stage(images, pages)
+
+        # 4. Synthesis & Intelligence
+        dossier = await self._synthesis_stage(
+            analysis_data, images, pages, previous_dossier
+        )
+
+        # 5. Delivery (QA, Manifests, PDF)
+        return await self._delivery_stage(dossier, images, pages)
+
+    # ─── Sub-Stages ───────────────────────────────────────────────────────
+
+    def _find_previous_run(self) -> dict[str, Any] | None:
+        """Looks for a previous dossier to enable delta analysis."""
+        try:
+            brand_outputs = self.workspace.root.parent
+            past_runs = sorted(
+                [d for d in brand_outputs.iterdir() if d.is_dir() and d.name != self.run_id],
+                key=lambda x: x.name,
+                reverse=True
+            )
+            if past_runs:
+                latest_past = past_runs[0] / "dossier.json"
+                if latest_past.exists():
+                    logger.info("delta.previous_found", path=str(latest_past))
+                    return json.loads(latest_past.read_text())
+        except Exception as exc:
+            logger.debug("delta.search_skipped", reason=str(exc))
+        return None
+
+    async def _acquisition_stage(self) -> tuple[list[Page], list[ImageRecord]]:
+        """Handles web crawling, social scraping, and image downloads."""
+        pages: list[Page] = []
+        candidates: list[tuple[str, dict[str, Any]]] = []
         rate_limiter = HostRateLimiter(default_delay_ms=self.brand_config.crawl.delay_ms)
-        with self._stage("crawl") as timing:
+
+        # Web Crawl
+        with self._stage("crawl") as t:
             try:
-                async with BrandCrawler(
-                    self.brand_config, self.settings.user_agent, rate_limiter
-                ) as crawler:
-                    crawl_result = await crawler.crawl()
-                pages = crawl_result.pages
-                image_candidates.extend(crawl_result.image_candidates)
-                timing["items"] = len(pages)
-                logger.info(
-                    "crawl.summary",
-                    pages=len(pages),
-                    image_candidates=len(crawl_result.image_candidates),
-                    fetch_errors=len(crawl_result.fetch_errors),
-                )
+                async with BrandCrawler(self.brand_config, self.settings.user_agent, rate_limiter) as crawler:
+                    res = await crawler.crawl()
+                    pages, candidates = res.pages, res.image_candidates
+                    t["items"] = len(pages)
             except Exception as exc:
                 logger.error("crawl.failed", error=str(exc))
 
-        # ── 2. Social (Instagram, best-effort) ──────────────────────────
-        with self._stage("social_instagram") as timing:
-            ig_handle = self.brand_config.social.get("instagram")
-            if ig_handle:
+        # Social (Instagram)
+        with self._stage("social_instagram") as t:
+            ig = self.brand_config.social.get("instagram")
+            if ig:
                 try:
                     scraper = InstagramScraper(user_agent=self.settings.user_agent)
-                    snap = await scraper.fetch_profile(ig_handle)
-                    if snap.image_candidates:
-                        image_candidates.extend(snap.image_candidates)
-                        timing["items"] = len(snap.image_candidates)
-                    if snap.blocked:
-                        logger.info("instagram.degraded", reason=snap.note)
+                    snap = await scraper.fetch_profile(ig)
+                    candidates.extend(snap.image_candidates)
+                    t["items"] = len(snap.image_candidates)
                 except Exception as exc:
                     logger.warning("instagram.error", error=str(exc))
-            else:
-                logger.info("instagram.skipped", reason="no handle configured")
 
-        # ── 3. Image download ──────────────────────────────────────────
-        images: list[ImageRecord] = []
-        with self._stage("image_download") as timing:
+        # Image Download
+        with self._stage("image_download") as t:
             downloader = ImageDownloader(
                 user_agent=self.settings.user_agent,
                 output_dir=self.workspace.images_dir,
@@ -151,231 +181,176 @@ class Orchestrator:
                 min_bytes=self.brand_config.filter.min_bytes,
                 max_bytes=self.brand_config.filter.max_bytes,
             )
-            images = await downloader.download_all(image_candidates)
-            timing["items"] = len(images)
+            images = await downloader.download_all(candidates)
+            t["items"] = len(images)
 
-        # ── 4. Quality filter (cheap, runs first) ──────────────────────
-        with self._stage("quality_filter") as timing:
-            kept, _ = filter_by_quality(
-                images,
-                min_shorter_side=self.brand_config.filter.min_shorter_side,
-                min_bytes=self.brand_config.filter.min_bytes,
-                max_bytes=self.brand_config.filter.max_bytes,
-            )
-            images = kept
-            timing["items"] = len(images)
+        return pages, images
 
-        # ── 5. Fashion classification + embeddings ─────────────────────
-        classification_signals: dict[str, Any] = {}
-        with self._stage("fashion_classifier") as timing:
+    async def _filtering_stage(self, images: list[ImageRecord], pages: list[Page]) -> list[ImageRecord]:
+        """Runs quality checks, fashion classification, and deduping."""
+        # Quality
+        with self._stage("quality_filter") as t:
+            images, _ = filter_by_quality(images, **self.brand_config.filter.model_dump())
+            t["items"] = len(images)
+
+        # Fashion Filter
+        with self._stage("fashion_classifier") as t:
             try:
-                clf = FashionClassifier(
-                    model_id=self.brand_config.analysis.fashion_classifier_model
-                )
-                images, _ = clf.apply(
-                    images,
-                    fashion_threshold=self.brand_config.filter.fashion_score_threshold,
-                )
-                timing["items"] = len(images)
-            except BrandDNAError as exc:
+                clf = FashionClassifier(model_id=self.brand_config.analysis.fashion_classifier_model)
+                images, _ = clf.apply(images, fashion_threshold=self.brand_config.filter.fashion_score_threshold)
+                t["items"] = len(images)
+            except Exception as exc:
                 logger.error("fashion_classifier.failed", error=str(exc))
 
-        # ── 6. Visual dedup ────────────────────────────────────────────
-        with self._stage("dedup") as timing:
-            dedup = VisualDeduplicator(
-                phash_hamming_threshold=self.brand_config.filter.phash_hamming_threshold
-            )
+        # Dedup
+        with self._stage("dedup") as t:
+            dedup = VisualDeduplicator(phash_hamming_threshold=self.brand_config.filter.phash_hamming_threshold)
             images, _ = dedup.dedup(images)
-            timing["items"] = len(images)
+            t["items"] = len(images)
 
-        # ── 7. Persist pages + images to SQLite ────────────────────────
-        with self._stage("persist") as timing:
+        # Persist
+        with self._stage("persist") as t:
             try:
                 self.metadata_store.insert_pages(pages)
                 self.metadata_store.insert_images(images)
-                timing["items"] = len(images) + len(pages)
+                t["items"] = len(images) + len(pages)
             except Exception as exc:
                 logger.warning("persist.failed", error=str(exc))
 
-        # ── 8. Visual analysis (color, garments, silhouettes) ──────────
-        with self._stage("color_palette") as timing:
-            palette = extract_palette(images, k=self.brand_config.analysis.palette_k)
-            timing["items"] = len(palette.entries)
+        return images
 
-        with self._stage("garment_aggregate") as timing:
-            garments = aggregate_garments(images)
-            timing["items"] = garments.sample_size
+    async def _analysis_stage(self, images: list[ImageRecord], pages: list[Page]) -> dict[str, Any]:
+        """Deep multimodal and linguistic analysis."""
+        data = {}
 
-        with self._stage("silhouette") as timing:
+        # 1. Palette & Garments (Synchronous/Fast)
+        with self._stage("color_palette") as t:
+            data["palette"] = extract_palette(images, k=self.brand_config.analysis.palette_k)
+            t["items"] = data["palette"].sample_size
+
+        with self._stage("garment_aggregate") as t:
+            data["garments"] = aggregate_garments(images)
+            t["items"] = data["garments"].sample_size
+
+        with self._stage("silhouette") as t:
             try:
-                silhouettes = derive_silhouette_summary(
-                    images,
-                    model_id=self.brand_config.analysis.fashion_classifier_model,
-                )
-            except Exception as exc:
-                logger.warning("silhouette.failed", error=str(exc))
-                silhouettes = []
-            timing["items"] = len(silhouettes)
+                data["silhouettes"] = derive_silhouette_summary(images, model_id=self.brand_config.analysis.fashion_classifier_model)
+            except Exception:
+                data["silhouettes"] = []
+            t["items"] = len(data["silhouettes"])
 
-        # ── 9. Aesthetic clustering ────────────────────────────────────
-        with self._stage("clustering") as timing:
+        # 2. Clustering
+        with self._stage("clustering") as t:
             clusterer = AestheticClusterer(
                 k_min=self.brand_config.analysis.n_aesthetic_clusters_min,
                 k_max=self.brand_config.analysis.n_aesthetic_clusters_max,
             )
-            clusters = clusterer.cluster(images)
-            timing["items"] = len(clusters)
-            # Re-persist images now that cluster_ids are set.
-            try:
-                self.metadata_store.insert_images(images)
-            except Exception:
-                pass
+            data["clusters"] = clusterer.cluster(images)
+            t["items"] = len(data["clusters"])
+            # Re-persist with cluster IDs
+            try: self.metadata_store.insert_images(images)
+            except Exception: pass
 
-        # ── 10. Text analysis (brand voice) ────────────────────────────
-        with self._stage("brand_voice") as timing:
+        # 3. Parallel AI Analysis (Voice + Audience)
+        with self._stage("analysis_parallel") as t:
             try:
-                voice, voice_chars = await analyse_brand_voice(
-                    pages,
-                    llm=self.llm,
-                    model=self.brand_config.model_for("primary"),
-                    brand_name=self.brand_config.name,
-                )
+                self.llm.target_language = self.brand_config.target_language
+                v_task = analyse_brand_voice(pages, llm=self.llm, model=self.brand_config.model_for("primary"), brand_name=self.brand_config.name)
+                a_task = extract_audience_profile(pages, images, data["clusters"], llm=self.llm, model=self.brand_config.model_for("primary"), brand_name=self.brand_config.name)
+                
+                (v_res, a_res) = await asyncio.gather(v_task, a_task)
+                data["voice"], v_chars = v_res
+                data["audience"], a_telemetry = a_res
+                data["signal_strengths"] = {
+                    "color_palette": {"sample_size": data["palette"].sample_size},
+                    "garments": {"sample_size": data["garments"].sample_size},
+                    "clusters": {"sample_size": sum(c.size for c in data["clusters"]), "chosen_k": len(data["clusters"])},
+                    "brand_voice": {"corpus_chars": v_chars},
+                    "audience": a_telemetry,
+                }
+                t["items"] = v_chars + a_telemetry.get("corpus_chars", 0)
             except Exception as exc:
-                logger.error("brand_voice.failed", error=str(exc))
-                from brand_dna.core.models import BrandVoice
-                voice = BrandVoice()
-                voice_chars = 0
-            timing["items"] = voice_chars
+                logger.error("parallel_analysis.failed", error=str(exc))
+                from brand_dna.core.models import BrandVoice, AudienceProfile
+                data["voice"], data["audience"] = BrandVoice(), AudienceProfile()
+                data["signal_strengths"] = {}
 
-        # ── 11. Audience profile (multi-modal) ─────────────────────────
-        with self._stage("audience") as timing:
-            try:
-                audience, audience_telemetry = await extract_audience_profile(
-                    pages,
-                    images,
-                    clusters,
-                    llm=self.llm,
-                    model=self.brand_config.model_for("primary"),
-                    brand_name=self.brand_config.name,
-                )
-            except Exception as exc:
-                logger.error("audience.failed", error=str(exc))
-                from brand_dna.core.models import AudienceProfile
-                audience = AudienceProfile()
-                audience_telemetry = {"corpus_chars": 0, "n_images_sampled": 0}
-            timing["items"] = audience_telemetry.get("corpus_chars", 0)
+        return data
 
-        # ── 12. Compose dossier ────────────────────────────────────────
+    async def _synthesis_stage(self, data: dict[str, Any], images: list[ImageRecord], pages: list[Page], previous_dossier: dict | None) -> BrandDNADossier:
+        """Synthesizes all signals into the final BrandDNADossier."""
         composer = DossierComposer(
             llm=self.llm,
             model_synthesis=self.brand_config.model_for("synthesis"),
             model_primary=self.brand_config.model_for("primary"),
         )
 
-        with self._stage("cluster_labels") as timing:
+        with self._stage("cluster_labels") as t:
             try:
-                clusters = await composer.label_clusters(
-                    clusters, images, self.brand_config.name
-                )
-            except Exception as exc:
-                logger.error("cluster_labels.failed", error=str(exc))
-            timing["items"] = len(clusters)
+                data["clusters"] = await composer.label_clusters(data["clusters"], images, self.brand_config.name)
+            except Exception: pass
+            t["items"] = len(data["clusters"])
 
-        # Build run metadata so the composer can include it in the dossier.
         run_metadata = self._build_run_metadata(
             images_acquired=len([i for i in images if i.quality_passed]),
             images_after_filter=len(images),
             pages_crawled=len(pages),
         )
 
-        signal_strengths = {
-            "color_palette": {"sample_size": palette.sample_size},
-            "garments": {"sample_size": garments.sample_size},
-            "clusters": {
-                "sample_size": sum(c.size for c in clusters),
-                "chosen_k": len(clusters),
-            },
-            "brand_voice": {"corpus_chars": voice_chars},
-            "audience": audience_telemetry,
-        }
-
-        with self._stage("synthesis") as timing:
-            try:
-                dossier = await composer.synthesise(
-                    brand_name=self.brand_config.name,
-                    brand_url=self.brand_config.url,
-                    social_handles=self.brand_config.social,
-                    palette=palette,
-                    garments=garments,
-                    silhouettes=silhouettes,
-                    clusters=clusters,
-                    voice=voice,
-                    audience=audience,
-                    images=images,
-                    signal_strengths=signal_strengths,
-                    run_metadata=run_metadata,
-                )
-            except Exception as exc:
-                logger.error("synthesis.failed", error=str(exc))
-                raise
-            timing["items"] = 1
-
-        # Finalise run metadata after synthesis (composer needed it earlier, but
-        # the final tokens-in/out aren't known until now).
-        dossier.run_metadata = self._build_run_metadata(
-            images_acquired=run_metadata.images_acquired,
-            images_after_filter=run_metadata.images_after_filter,
-            pages_crawled=run_metadata.pages_crawled,
-        )
-
-        # ── 13. Write JSON manifests ───────────────────────────────────
-        with self._stage("write_manifests") as timing:
-            self.workspace.dossier_json_path.write_text(
-                json.dumps(dossier.to_manifest(), indent=2, default=str),
-                encoding="utf-8",
+        with self._stage("synthesis") as t:
+            dossier = await composer.synthesise(
+                brand_name=self.brand_config.name,
+                brand_url=self.brand_config.url,
+                social_handles=self.brand_config.social,
+                palette=data["palette"],
+                garments=data["garments"],
+                silhouettes=data["silhouettes"],
+                clusters=data["clusters"],
+                voice=data["voice"],
+                audience=data["audience"],
+                images=images,
+                signal_strengths=data["signal_strengths"],
+                run_metadata=run_metadata,
+                previous_dossier=previous_dossier,
             )
-            self.workspace.train_manifest_path.write_text(
-                json.dumps(
-                    dossier.train_modules.model_dump(mode="json"), indent=2, default=str
-                ),
-                encoding="utf-8",
-            )
-            timing["items"] = 2
+            t["items"] = 1
+        return dossier
 
-        # ── 14. Render PDF ─────────────────────────────────────────────
-        with self._stage("pdf_render") as timing:
-            renderer = PDFRenderer()
+    async def _delivery_stage(self, dossier: BrandDNADossier, images: list[ImageRecord], pages: list[Page]) -> BrandDNADossier:
+        """QA, Manifests, and PDF rendering."""
+        # 1. Self-Eval
+        with self._stage("self_evaluation") as t:
             try:
-                renderer.render_pdf(
-                    dossier, images, self.workspace.dossier_pdf_path
-                )
-                timing["items"] = 1
+                from brand_dna.analysis.self_eval import self_evaluate
+                eval_res = await self_evaluate(dossier, llm=self.llm, model=self.brand_config.model_for("primary"))
+                dossier.custom_data["self_evaluation"] = eval_res
+            except Exception: pass
+            t["items"] = 1
+
+        # 2. Manifests
+        with self._stage("write_manifests") as t:
+            self.workspace.dossier_json_path.write_text(json.dumps(dossier.to_manifest(), indent=2, default=str))
+            self.workspace.train_manifest_path.write_text(json.dumps(dossier.train_modules.model_dump(mode="json"), indent=2, default=str))
+            t["items"] = 2
+
+        # 3. PDF
+        with self._stage("pdf_render") as t:
+            try:
+                PDFRenderer().render_pdf(dossier, images, self.workspace.dossier_pdf_path)
+                t["items"] = 1
             except Exception as exc:
                 logger.error("pdf_render.failed", error=str(exc))
 
-        # ── 15. Write run report ──────────────────────────────────────
+        # 4. Finalize Report
         report = {
             "run_id": self.run_id,
             "brand": self.brand_config.name,
-            "started_at": self.started_at.isoformat(),
             "finished_at": datetime.now(timezone.utc).isoformat(),
             "stages": [s.model_dump(mode="json") for s in self._stage_timings],
-            "llm_usage": {
-                "calls": self.llm.ledger.calls,
-                "tokens_in": self.llm.ledger.tokens_in,
-                "tokens_out": self.llm.ledger.tokens_out,
-                "cost_usd": self.llm.ledger.cost_usd,
-            },
-            "images_acquired": dossier.run_metadata.images_acquired,
-            "images_after_filter": dossier.run_metadata.images_after_filter,
-            "pages_crawled": dossier.run_metadata.pages_crawled,
+            "llm_usage": self.llm.ledger.__dict__,
             "workspace": str(self.workspace.root),
         }
-        self.workspace.report_path.write_text(
-            json.dumps(report, indent=2), encoding="utf-8"
-        )
-        logger.info("run.report_written", path=str(self.workspace.report_path))
-
+        self.workspace.report_path.write_text(json.dumps(report, indent=2))
         return dossier
 
     # ─── Helpers ──────────────────────────────────────────────────────────

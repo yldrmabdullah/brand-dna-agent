@@ -30,6 +30,7 @@ OUTPUTS_DIR = settings.output_dir
 class BrandCreateRequest(BaseModel):
     name: str
     url: str
+    target_language: str = "English"
     social: dict[str, str] = Field(default_factory=dict)
     known_categories: list[str] = Field(default_factory=list)
     seed_pages: list[str] = Field(default_factory=list)
@@ -111,6 +112,20 @@ def _list_runs_for(slug: str) -> list[dict[str, Any]]:
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Brand DNA Agent", version="0.1.0")
+    
+    # ── Global Error Handling ─────────────────────────────────────────────
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request, exc):
+        logger.error("api.unhandled_exception", path=request.url.path, error=str(exc))
+        return HTMLResponse(
+            status_code=500,
+            content=json.dumps({"ok": False, "error": "An internal server error occurred. Please check logs."})
+        )
+
+    @app.exception_handler(HTTPException)
+    async def http_exception_handler(request, exc):
+        return HTMLResponse(status_code=exc.status_code, content=json.dumps({"ok": False, "error": exc.detail}))
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -159,6 +174,7 @@ def create_app() -> FastAPI:
         config: dict[str, Any] = {
             "name": req.name,
             "url": req.url,
+            "target_language": req.target_language,
         }
         if req.social:
             config["social"] = req.social
@@ -190,7 +206,11 @@ def create_app() -> FastAPI:
         for b in _list_brands():
             if b["slug"] == slug:
                 path = BRANDS_DIR / b["config_file"]
-                config: dict[str, Any] = {"name": req.name, "url": req.url}
+                config: dict[str, Any] = {
+                    "name": req.name,
+                    "url": req.url,
+                    "target_language": req.target_language
+                }
                 if req.social:
                     config["social"] = req.social
                 if req.known_categories:
@@ -224,6 +244,13 @@ def create_app() -> FastAPI:
 
     @app.post("/api/brands/{slug}/run")
     async def start_run(slug: str):
+        import os
+        if os.getenv("DEMO_MODE", "false").lower() == "true":
+            return HTMLResponse(
+                status_code=403, 
+                content=json.dumps({"ok": False, "error": "System is in DEMO MODE. Running new analyses is disabled."})
+            )
+
         brand = None
         for b in _list_brands():
             if b["slug"] == slug:
@@ -302,3 +329,8 @@ def create_app() -> FastAPI:
         return HTMLResponse("<h1>Brand DNA Agent</h1><p>Web UI not found.</p>")
 
     return app
+
+
+from brand_dna.core.orchestrator import Orchestrator
+
+app = create_app()
